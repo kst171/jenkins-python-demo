@@ -2,13 +2,6 @@ pipeline {
     agent {label 'python21'}
 
     stages {
-        stage('Клонирование репозитория из Git') {
-            steps {
-                checkout scm
-                echo '✅ Репозиторий успешно клонирован'
-            }
-        }
-
         stage('Test') {
             steps {
                 sh 'whoami'
@@ -16,6 +9,13 @@ pipeline {
                 sh 'git --version'
                 sh 'python3 --version'
                 sh 'java -version'
+            }
+        }
+        
+        stage('Клонирование репозитория из Git') {
+            steps {
+                checkout scm
+                echo '✅ Репозиторий успешно клонирован'
             }
         }
 
