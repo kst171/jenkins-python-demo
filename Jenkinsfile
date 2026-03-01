@@ -9,6 +9,16 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                sh 'whoami'
+                sh 'pwd'
+                sh 'git --version'
+                sh 'python3 --version'
+                sh 'java -version'
+            }
+        }
+
         stage('Сборка приложения (pip)') {
             steps {
                 sh '''
