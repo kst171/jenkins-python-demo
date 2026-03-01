@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'python_docker_jenkins_agent'}
+    agent {label 'python21'}
 
     stages {
         stage('Клонирование репозитория из Git') {
