@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pytest
 from app import app
 
@@ -10,7 +11,7 @@ def client():
 def test_home_page(client):
     response = client.get("/")
     assert response.status_code == 200
-    assert b"Привет!" in response.data
+    assert "Привет!".encode("utf-8") in response.data
 
 def test_status_endpoint(client):
     response = client.get("/status")
