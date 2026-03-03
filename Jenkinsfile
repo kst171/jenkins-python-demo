@@ -32,6 +32,7 @@ pipeline {
                     . venv/bin/activate
                     pip install --upgrade pip
                     pip install -r requirements.txt
+                    pip install allure-pytest
                 '''
                 echo '✅ Сборка завершена: зависимости установлены'
             }
@@ -41,7 +42,9 @@ pipeline {
             steps {
                 sh '''
                     . venv/bin/activate
-                    pytest --junitxml=test-results.xml --tb=short -q
+                    pytest --junitxml=test-results.xml \
+                           --alluredir=allure-results \
+                           --tb=short -q
                 '''
                 echo '✅ Тесты выполнены'
             }
@@ -51,9 +54,17 @@ pipeline {
     post {
         always {
             junit 'test-results.xml'
+
             archiveArtifacts artifacts: 'test-results.xml',
                              fingerprint: true,
                              allowEmptyArchive: true
+
+            allure([
+                includeProperties: false,
+                jdk: '',
+                results: [[path: 'allure-results']]
+            ])
+
             echo '📊 Отчёты сохранены и опубликованы в веб-интерфейсе Jenkins'
         }
 
@@ -74,7 +85,8 @@ pipeline {
                     </table>
                     <br>
                     <a href="${BUILD_URL}">Открыть сборку</a> |
-                    <a href="${BUILD_URL}testReport">Результаты тестов</a>
+                    <a href="${BUILD_URL}testReport">Результаты тестов</a> |
+                    <a href="${BUILD_URL}allure">Allure отчёт</a>
                 """
             )
         }
@@ -97,7 +109,8 @@ pipeline {
                     </table>
                     <br>
                     <a href="${BUILD_URL}console">Посмотреть логи</a> |
-                    <a href="${BUILD_URL}testReport">Результаты тестов</a>
+                    <a href="${BUILD_URL}testReport">Результаты тестов</a> |
+                    <a href="${BUILD_URL}allure">Allure отчёт</a>
                     <br><br>
                     <i>Лог сборки во вложении</i>
                 """
@@ -118,7 +131,8 @@ pipeline {
                         <tr><td><b>Ветка:</b></td><td>${GIT_BRANCH}</td></tr>
                     </table>
                     <br>
-                    <a href="${BUILD_URL}testReport">Посмотреть упавшие тесты</a>
+                    <a href="${BUILD_URL}testReport">Результаты тестов</a> |
+                    <a href="${BUILD_URL}allure">Allure отчёт</a>
                 """
             )
         }
