@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'python21'}
+    agent {label 'python'}
 
     stages {
         stage('Test') {
